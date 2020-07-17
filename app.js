@@ -6,8 +6,9 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 var indexRouter = require("./routes/index");
-const mailsRouter = require("./components/mails/mailRoutes")
-const usersRouter = require("./components/users/userRoutes")
+const mailsRouter = require("./components/mails/mailRoutes");
+const usersRouter = require("./components/users/userRoutes");
+const authRouter = require("./components/authentication/authRoutes");
 
 var app = express();
 
@@ -27,8 +28,7 @@ mongoose.connect(
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
-app.use("/mail", mailsRouter)
-
-
+app.use("/mail", mailsRouter);
+app.use("/login", authRouter);
 
 module.exports = app;
