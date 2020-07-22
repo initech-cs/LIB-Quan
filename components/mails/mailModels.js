@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const User = require("../users/userModels");
 
 const mailSchema = mongoose.Schema({
   content: {
@@ -14,6 +15,15 @@ const mailSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+});
+
+mailSchema.pre("save", async function (next) {
+  const user = await User.findOne({ _id: this.author });
+
+  user.mails.push(this);
+  await user.save();
+  // console.log(user)
+  next();
 });
 
 const Mail = mongoose.model("Mail", mailSchema);

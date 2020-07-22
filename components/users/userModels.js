@@ -22,8 +22,12 @@ const userSchema = mongoose.Schema(
       trim: true,
     },
     mails: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Mail",
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Mail",
+        },
+      ],
     },
     receivedMails: {
       type: mongoose.Schema.Types.ObjectId,
@@ -58,8 +62,8 @@ userSchema.methods.toJSON = function () {
   delete userObj.__v;
   delete userObj.id;
   delete userObj.tokens;
-  return userObj
-}
+  return userObj;
+};
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
