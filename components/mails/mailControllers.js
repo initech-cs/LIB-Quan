@@ -8,10 +8,30 @@ exports.createMail = async (req, res) => {
       content,
       author: req.user._id,
     });
-    
+
     await mail.save();
     res.status(200).json({ status: "OK", data: mail });
   } catch (error) {
     res.status(400).json({ status: "NOT OK", error: error.message });
   }
 };
+
+exports.getMails = async (req, res) => {
+  try {
+    const mails = await Mail.find();
+    return res.status(200).json({ status: "OK", data: mails });
+  } catch (error) {
+    res.status(404).json({ status: "NOT OK", error: error.message });
+  }
+};
+
+exports.deleteMail = async(req, res) => {
+  console.log(req.params)
+  try {
+    const {id} = req.params
+    await Mail.findOneAndDelete({_id: id})
+    res.status(200).json({status: "OK", message: "Mail is deleted"})
+  } catch (error) {
+    res.status(400).json({status: "NOT OK", error: error.message})
+  }
+}
