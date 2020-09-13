@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const User = require("../users/userModels");
 
 const mailSchema = mongoose.Schema({
+  title: String,
   content: {
     type: String,
     required: [true, "Mail content is missing"],
