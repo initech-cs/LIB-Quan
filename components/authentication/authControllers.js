@@ -19,7 +19,7 @@ exports.login = async (req, res) => {
 
     if (match) {
       const token = await user[0].generateToken();
-      res.status(400).json({ status: "OK", user, token });
+      res.status(200).json({ status: "OK", user, token });
     } else throw new Error("Wrong password/ email");
   } catch (error) {
     res.status(400).json({ status: "NOT OK", error: error.message });
