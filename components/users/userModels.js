@@ -33,10 +33,12 @@ const userSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Mail",
     },
-    corresponders: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
+    corresponders: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     tokens: [
       {
         type: String,
@@ -47,9 +49,13 @@ const userSchema = mongoose.Schema(
 );
 
 userSchema.methods.generateToken = async function () {
-  const token = jwt.sign({ _id: this._id, username: this.username, email: this.email }, process.env.JWT_SECRET, {
-    expiresIn: "14d",
-  });
+  const token = jwt.sign(
+    { _id: this._id, username: this.username, email: this.email },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "14d",
+    }
+  );
   this.tokens.push(token);
   await this.save();
   return token;

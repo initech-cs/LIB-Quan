@@ -36,6 +36,7 @@ exports.loginRequired = catchAsync(async (request, response, next) => {
   const user = await User.findOne({ _id: decode._id, tokens: token });
   if (!user) throw new Error("Invalid user");
   request.user = user;
+  console.log(user)
   request.token = token;
   next();
 });

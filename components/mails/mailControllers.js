@@ -3,8 +3,9 @@ const User = require("../users/userModels");
 
 exports.createMail = async (req, res) => {
   try {
-    const { content, send } = req.body;
+    const { title, content, send } = req.body;
     const mail = new Mail({
+      title,
       content,
       author: req.user._id,
     });
@@ -12,8 +13,15 @@ exports.createMail = async (req, res) => {
     await mail.save();
     if (send) {
       const user = await User.findOne({ _id: send });
-      user.mails.push(mail)
-      await user.save();
+      console.log(user)
+      user.mails.push(mail);
+
+      if (req.user.corresponders) {
+        req.user.corresponders.includes(send)
+          ? null
+          : req.user.corresponders.push(send);
+      }
+      await req.user.save();
     }
     res.status(200).json({ status: "OK", data: mail, sentTo: send });
   } catch (error) {
