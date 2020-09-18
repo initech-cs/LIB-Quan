@@ -15,6 +15,10 @@ const mailSchema = mongoose.Schema({
     ref: "User",
     required: [true, "Author is required"],
   },
+  isPrivate: {
+    type: Boolean,
+    required: true
+  },
   reader: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

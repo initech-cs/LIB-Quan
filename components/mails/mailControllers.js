@@ -13,7 +13,8 @@ exports.createMail = async (req, res) => {
     await mail.save();
     if (send) {
       const user = await User.findOne({ _id: send });
-      console.log(user)
+      mail.isPrivate = true;
+      await mail.save();
       user.mails.push(mail);
 
       if (req.user.corresponders) {
@@ -22,6 +23,7 @@ exports.createMail = async (req, res) => {
           : req.user.corresponders.push(send);
       }
       await req.user.save();
+      
     }
     res.status(200).json({ status: "OK", data: mail, sentTo: send });
   } catch (error) {
@@ -31,7 +33,7 @@ exports.createMail = async (req, res) => {
 
 exports.getMails = async (req, res) => {
   try {
-    const mails = await Mail.find();
+    const mails = await Mail.find({ isPrivate: false });
     return res.status(200).json({ status: "OK", data: mails });
   } catch (error) {
     res.status(404).json({ status: "NOT OK", error: error.message });
@@ -49,7 +51,6 @@ exports.getOneMail = async (req, res) => {
 };
 
 exports.deleteMail = async (req, res) => {
-  console.log(req.params);
   try {
     const { id } = req.params;
     await Mail.findOneAndDelete({ _id: id });
