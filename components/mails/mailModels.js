@@ -4,7 +4,7 @@ const User = require("../users/userModels");
 const mailSchema = mongoose.Schema({
   title: {
     type: String,
-    required: [true, "Title is required"]
+    required: [true, "Title is required"],
   },
   content: {
     type: String,
@@ -17,7 +17,7 @@ const mailSchema = mongoose.Schema({
   },
   isPrivate: {
     type: Boolean,
-    required: true
+    default: false,
   },
   reader: {
     type: mongoose.Schema.Types.ObjectId,

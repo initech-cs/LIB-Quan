@@ -10,21 +10,24 @@ exports.createMail = async (req, res) => {
       author: req.user._id,
     });
 
-    await mail.save();
     if (send) {
-      const user = await User.findOne({ _id: send });
-      mail.isPrivate = true;
-      await mail.save();
-      user.mails.push(mail);
+      try {
+        const user = await User.findOne({ _id: send });
+        mail.isPrivate = true;
+        await mail.save();
+        user.mails.push(mail);
 
-      if (req.user.corresponders) {
-        req.user.corresponders.includes(send)
-          ? null
-          : req.user.corresponders.push(send);
+        if (req.user.corresponders) {
+          req.user.corresponders.includes(send)
+            ? null
+            : req.user.corresponders.push(send);
+        }
+        await req.user.save();
+      } catch (err) {
+        res.status(400).json({ status: "NOT OK", error: err.message });
       }
-      await req.user.save();
-      
     }
+    await mail.save();
     res.status(200).json({ status: "OK", data: mail, sentTo: send });
   } catch (error) {
     res.status(400).json({ status: "NOT OK", error: error.message });
